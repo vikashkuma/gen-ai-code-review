@@ -1,21 +1,30 @@
-// React – Subtle Performance Bug
-// Problems
+/***************************************************************
+ * UserList Component
+ * Renders a list of active users.
+ * Efficiently filters users using useMemo.
+ ****************************************************************/
 
-// Infinite re-render loop
-// AI doesn’t understand state derivation
-// Violates React mental model
+import React, { useMemo } from 'react';
 
+/**
+ * Renders a list of active users.
+ * @param {Object} props
+ * @param {Array<{id: number, name: string, active: boolean}>} props.users - List of user objects.
+ * @returns {JSX.Element}
+ */
 function UserList({ users }) {
-    const [filtered, setFiltered] = useState([]);
-  
-    useEffect(() => {
-      const result = users.filter(u => u.active);
-      setFiltered(result);
-    }, [users, filtered]); // ❌ BUG
-  
-    return (
-      <ul>
-        {filtered.map(u => <li key={u.id}>{u.name}</li>)}
-      </ul>
-    );
+  const filtered = useMemo(
+    () => users.filter(u => u.active),
+    [users]
+  );
+
+  return (
+    <ul>
+      {filtered.map(u => (
+        <li key={u.id}>{u.name}</li>
+      ))}
+    </ul>
+  );
 }
+
+export default UserList;
